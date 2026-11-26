@@ -209,3 +209,43 @@ profileForm.addEventListener("submit", async (event) => {
   }
 });
 
+// Unitary profile picture preview
+const profilePictureInput =
+  document.getElementById("profilePicture");
+
+const avatarPreview =
+  document.getElementById("avatarPreview");
+
+let avatarPreviewUrl = "";
+
+profilePictureInput.addEventListener("change", () => {
+  const file = profilePictureInput.files[0];
+
+  if (!file) return;
+
+  if (!["image/jpeg", "image/png", "image/webp"].includes(file.type)) {
+    profileMessage.textContent =
+      "Please select a JPG, PNG or WebP image.";
+    profilePictureInput.value = "";
+    return;
+  }
+
+  if (file.size > 5 * 1024 * 1024) {
+    profileMessage.textContent =
+      "Please select an image smaller than 5 MB.";
+    profilePictureInput.value = "";
+    return;
+  }
+
+  if (avatarPreviewUrl) {
+    URL.revokeObjectURL(avatarPreviewUrl);
+  }
+
+  avatarPreviewUrl = URL.createObjectURL(file);
+  avatarPreview.src = avatarPreviewUrl;
+  avatarPreview.hidden = false;
+
+  profileMessage.textContent =
+    "Picture preview ready!";
+});
+      
