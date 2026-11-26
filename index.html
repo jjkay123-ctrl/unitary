@@ -50,6 +50,35 @@
       <p id="message" role="status"></p>
     </section>
 
+<section id="profileSection" class="auth-card" hidden>
+  <h2>Your Unitary Profile</h2>
+
+  <form id="profileForm">
+    <label for="displayName">Display name</label>
+    <input id="displayName" type="text"
+      placeholder="Your display name" required>
+
+    <label for="username">Username</label>
+    <input id="username" type="text"
+      placeholder="Choose a username" required>
+
+    <label for="bio">Biography</label>
+    <textarea id="bio"
+      placeholder="Tell the community about yourself"></textarea>
+
+    <label>
+      <input id="isPrivate" type="checkbox" 
+      Make my profile private
+    </label>
+
+    <button class="primary" type="submit">
+      Save profile
+    </button>
+  </form>
+
+  <p id="profileMessage" role="status"></p>
+</section>
+    
     <footer>
       © 2026 Unitary. One platform. One worldwide community.
     </footer>
