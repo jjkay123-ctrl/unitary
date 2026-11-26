@@ -1,1 +1,715 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#101828">
+  <meta name="description" content="Unitary — Connect, communicate, create and share with the world.">
+  <meta name="author" content="Unitary">
+  <title>Unitary — Connect Without Limits</title>
+
+  <link rel="stylesheet" href="styles.css">
+  <link rel="icon" href="favicon.ico">
+
+  <meta property="og:title" content="Unitary">
+  <meta property="og:description" content="A worldwide community for connecting and sharing.">
+  <meta property="og:type" content="website">
+</head>
+
+<body>
+
+  <!-- =========================================
+       APPLICATION LOADING SCREEN
+  ========================================== -->
+  <div id="loadingScreen" class="loading-screen">
+    <div class="loading-content">
+      <h1>UNITARY</h1>
+      <p>Connecting the world...</p>
+      <div class="loading-spinner"></div>
+    </div>
+  </div>
+
+  <!-- =========================================
+       GLOBAL NOTIFICATION AREA
+  ========================================== -->
+  <div id="globalMessage" class="global-message" role="status" aria-live="polite"></div>
+
+  <!-- =========================================
+       AUTHENTICATION
+  ========================================== -->
+  <main id="authSection" class="auth-section">
+
+    <div class="auth-brand">
+      <h1>UNITARY</h1>
+      <p>One world. One community.</p>
+      <p>Connect, communicate and share.</p>
+    </div>
+
+    <div class="auth-card">
+
+      <div class="auth-tabs">
+        <button type="button" id="loginTab" class="active">
+          Log In
+        </button>
+
+        <button type="button" id="signupTab">
+          Create Account
+        </button>
+      </div>
+
+      <form id="authForm">
+
+        <h2 id="authTitle">Welcome Back</h2>
+
+        <div id="displayNameGroup" hidden>
+          <label for="authDisplayName">Display name</label>
+          <input
+            type="text"
+            id="authDisplayName"
+            placeholder="Your name"
+            autocomplete="name"
+          >
+        </div>
+
+        <label for="email">Email address</label>
+        <input
+          type="email"
+          id="email"
+          placeholder="Enter your email"
+          autocomplete="email"
+          required
+        >
+
+        <label for="password">Password</label>
+        <input
+          type="password"
+          id="password"
+          placeholder="Enter your password"
+          autocomplete="current-password"
+          required
+          minlength="6"
+        >
+
+        <div id="confirmPasswordGroup" hidden>
+          <label for="confirmPassword">Confirm password</label>
+          <input
+            type="password"
+            id="confirmPassword"
+            placeholder="Confirm your password"
+            autocomplete="new-password"
+          >
+        </div>
+
+        <button type="submit" id="submitBtn">
+          Log In
+        </button>
+
+        <button type="button" id="forgotPasswordBtn">
+          Forgot password?
+        </button>
+
+        <div class="auth-divider">
+          <span>OR</span>
+        </div>
+
+        <button type="button" id="googleBtn">
+          Continue with Google
+        </button>
+
+        <p id="message" role="status" aria-live="polite"></p>
+
+        <p class="auth-legal">
+          By creating an account, you agree to our
+          <a href="#termsSection">Terms of Use</a>
+          and
+          <a href="#privacySection">Privacy Policy</a>.
+        </p>
+
+      </form>
+    </div>
+  </main>
+
+  <!-- =========================================
+       MAIN APPLICATION
+  ========================================== -->
+  <div id="appSection" class="app-section" hidden>
+
+    <!-- TOP NAVIGATION -->
+    <header id="topNavigation" class="top-navigation">
+
+      <a href="#homeSection" class="brand-logo">
+        UNITARY
+      </a>
+
+      <form id="globalSearchForm" role="search">
+        <input
+          type="search"
+          id="globalSearch"
+          placeholder="Search people, posts, groups..."
+          aria-label="Search Unitary"
+        >
+        <button type="submit">Search</button>
+      </form>
+
+      <nav class="top-actions" aria-label="Main shortcuts">
+
+        <button type="button" data-section="notificationsSection">
+          Notifications
+          <span id="notificationBadge">0</span>
+        </button>
+
+        <button type="button" data-section="messagesSection">
+          Messages
+          <span id="messageBadge">0</span>
+        </button>
+
+        <button type="button" data-section="profileSection">
+          My Profile
+        </button>
+
+      </nav>
+
+    </header>
+
+    <!-- APPLICATION LAYOUT -->
+    <div class="app-layout">
+
+      <!-- SIDEBAR -->
+      <aside id="sidebar" class="sidebar">
+
+        <nav aria-label="Application navigation">
+
+          <button type="button" data-section="homeSection">
+            Home
+          </button>
+
+          <button type="button" data-section="discoverSection">
+            Discover
+          </button>
+
+          <button type="button" data-section="messagesSection">
+            Messages
+          </button>
+
+          <button type="button" data-section="callsSection">
+            Calls
+          </button>
+
+          <button type="button" data-section="communitiesSection">
+            Communities
+          </button>
+
+          <button type="button" data-section="notificationsSection">
+            Notifications
+          </button>
+
+          <button type="button" data-section="savedSection">
+            Saved
+          </button>
+
+          <button type="button" data-section="profileSection">
+            Profile
+          </button>
+
+          <button type="button" data-section="settingsSection">
+            Settings
+          </button>
+
+        </nav>
+
+        <div class="sidebar-footer">
+          <button type="button" data-section="helpSection">
+            Help and Support
+          </button>
+
+          <button type="button" id="sidebarLogoutBtn">
+            Log Out
+          </button>
+        </div>
+
+      </aside>
+
+      <!-- MAIN CONTENT -->
+      <main id="mainContent" class="main-content">
+
+        <!-- =====================================
+             HOME / FEED
+        ====================================== -->
+        <section id="homeSection" class="page-section active">
+
+          <header class="section-header">
+            <h1>Home</h1>
+            <p>See what's happening around the world.</p>
+          </header>
+
+          <!-- STORIES -->
+          <section id="storiesSection">
+            <h2>Stories</h2>
+
+            <div id="storiesContainer">
+              <button type="button" id="addStoryBtn">
+                Add Story
+              </button>
+              <div id="storiesList"></div>
+            </div>
+
+            <input
+              type="file"
+              id="storyUpload"
+              accept="image/*,video/*"
+              hidden
+            >
+          </section>
+
+          <!-- CREATE POST -->
+          <section id="createPostSection">
+
+            <h2>Create a post</h2>
+
+            <form id="createPostForm">
+
+              <textarea
+                id="postText"
+                placeholder="What would you like to share?"
+                maxlength="5000"
+              ></textarea>
+
+              <div class="post-attachments">
+
+                <label for="postImage">
+                  Add image
+                </label>
+
+                <input
+                  type="file"
+                  id="postImage"
+                  accept="image/*"
+                  multiple
+                  hidden
+                >
+
+                <label for="postVideo">
+                  Add video
+                </label>
+
+                <input
+                  type="file"
+                  id="postVideo"
+                  accept="video/*"
+                  hidden
+                >
+
+                <button type="button" id="postLocationBtn">
+                  Add location
+                </button>
+
+                <button type="button" id="postPollBtn">
+                  Create poll
+                </button>
+
+              </div>
+
+              <div id="postPreview"></div>
+
+              <button type="submit" id="publishPostBtn">
+                Publish Post
+              </button>
+
+            </form>
+
+          </section>
+
+          <!-- FEED FILTERS -->
+          <div id="feedFilters">
+            <button type="button" data-feed-filter="all">All</button>
+            <button type="button" data-feed-filter="following">Following</button>
+            <button type="button" data-feed-filter="popular">Popular</button>
+            <button type="button" data-feed-filter="latest">Latest</button>
+          </div>
+
+          <!-- POSTS -->
+          <section id="feedSection">
+            <h2>Community Feed</h2>
+            <div id="feedContainer">
+              <p id="feedEmptyMessage">
+                Your community feed will appear here.
+              </p>
+            </div>
+            <button type="button" id="loadMorePostsBtn">
+              Load More
+            </button>
+          </section>
+
+        </section>
+
+        <!-- =====================================
+             DISCOVER
+        ====================================== -->
+        <section id="discoverSection" class="page-section" hidden>
+
+          <h1>Discover</h1>
+          <p>Explore people, ideas and communities.</p>
+
+          <div class="discover-categories">
+            <button type="button" data-discover="people">People</button>
+            <button type="button" data-discover="posts">Posts</button>
+            <button type="button" data-discover="videos">Videos</button>
+            <button type="button" data-discover="hashtags">Hashtags</button>
+            <button type="button" data-discover="communities">Communities</button>
+          </div>
+
+          <section id="trendingSection">
+            <h2>Trending</h2>
+            <div id="trendingContainer"></div>
+          </section>
+
+          <section id="suggestedUsersSection">
+            <h2>Suggested Accounts</h2>
+            <div id="suggestedUsersContainer"></div>
+          </section>
+
+          <section id="discoverResultsSection">
+            <h2>Explore</h2>
+            <div id="discoverResults"></div>
+          </section>
+
+        </section>
+
+        <!-- =====================================
+             USER PROFILE
+        ====================================== -->
+        <section id="profileSection" class="page-section" hidden>
+
+          <h1>My Profile</h1>
+
+          <div id="profileHeader">
+
+            <img
+              id="profileAvatar"
+              src=""
+              alt="Profile picture"
+              width="120"
+              height="120"
+            >
+
+            <h2 id="profileDisplayName">Your Name</h2>
+            <p id="profileUsername">@username</p>
+            <p id="profileBio">Your biography will appear here.</p>
+
+            <div class="profile-statistics">
+              <span id="postCount">0 Posts</span>
+              <span id="followerCount">0 Followers</span>
+              <span id="followingCount">0 Following</span>
+            </div>
+
+            <button type="button" id="editProfileBtn">
+              Edit Profile
+            </button>
+
+          </div>
+
+          <!-- PROFILE EDITING -->
+          <div id="profileEditor" hidden>
+
+            <h2>Edit Profile</h2>
+
+            <form id="profileForm">
+
+              <label for="displayName">Display name</label>
+              <input
+                type="text"
+                id="displayName"
+                maxlength="60"
+              >
+
+              <label for="username">Username</label>
+              <input
+                type="text"
+                id="username"
+                maxlength="30"
+              >
+
+              <label for="bio">Biography</label>
+              <textarea
+                id="bio"
+                maxlength="500"
+              ></textarea>
+
+              <label for="profilePicture">Profile picture</label>
+              <input
+                type="file"
+                id="profilePicture"
+                accept="image/*"
+              >
+
+              <img
+                id="avatarPreview"
+                src=""
+                alt="Profile picture preview"
+                width="100"
+                hidden
+              >
+
+              <label for="coverPicture">Cover picture</label>
+              <input
+                type="file"
+                id="coverPicture"
+                accept="image/*"
+              >
+
+              <label>
+                <input type="checkbox" id="isPrivate">
+                Private account
+              </label>
+
+              <button type="submit" id="saveProfileBtn">
+                Save Profile
+              </button>
+
+              <button type="button" id="cancelProfileEditBtn">
+                Cancel
+              </button>
+
+              <p id="profileMessage" role="status"></p>
+
+            </form>
+
+          </div>
+
+          <!-- PROFILE TABS -->
+          <div class="profile-tabs">
+            <button type="button" data-profile-tab="posts">Posts</button>
+            <button type="button" data-profile-tab="media">Media</button>
+            <button type="button" data-profile-tab="likes">Likes</button>
+            <button type="button" data-profile-tab="about">About</button>
+          </div>
+
+          <div id="profileContent"></div>
+
+        </section>
+
+        <!-- =====================================
+             MESSAGES
+        ====================================== -->
+        <section id="messagesSection" class="page-section" hidden>
+
+          <h1>Messages</h1>
+
+          <div class="messaging-layout">
+
+            <aside id="conversationSidebar">
+              <button type="button" id="newMessageBtn">
+                New Message
+              </button>
+
+              <input
+                type="search"
+                id="conversationSearch"
+                placeholder="Search conversations"
+              >
+
+              <div id="conversationList"></div>
+            </aside>
+
+            <section id="chatWindow">
+
+              <div id="chatHeader">
+                <h2 id="chatUserName">Select a conversation</h2>
+
+                <button type="button" id="chatVoiceCallBtn">
+                  Voice Call
+                </button>
+
+                <button type="button" id="chatVideoCallBtn">
+                  Video Call
+                </button>
+
+              </div>
+
+              <div id="chatMessages">
+                <p>Select a conversation to begin.</p>
+              </div>
+
+              <form id="messageForm">
+
+                <input
+                  type="text"
+                  id="messageInput"
+                  placeholder="Write a message..."
+                  maxlength="5000"
+                >
+
+                <label for="messageAttachment">
+                  Attach
+                </label>
+
+                <input
+                  type="file"
+                  id="messageAttachment"
+                  accept="image/*,video/*,.pdf"
+                  hidden
+                >
+
+                <button type="button" id="messageEmojiBtn">
+                  Emoji
+                </button>
+
+                <button type="submit" id="sendMessageBtn">
+                  Send
+                </button>
+
+              </form>
+
+              <div id="messageReplyPreview"></div>
+
+            </section>
+
+          </div>
+
+          <!-- GROUP CHAT -->
+          <section id="groupChatSection">
+            <h2>Group Conversations</h2>
+
+            <button type="button" id="createGroupBtn">
+              Create Group
+            </button>
+
+            <div id="groupList"></div>
+          </section>
+
+          <!-- FUTURE MESSAGE OPTIONS -->
+          <section id="messageFeatures">
+            <h2>Conversation Features</h2>
+            <p>Prepared for future integration:</p>
+            <ul>
+              <li>Message reactions</li>
+              <li>Reply to messages</li>
+              <li>Forward messages</li>
+              <li>Message editing</li>
+              <li>Message deletion</li>
+              <li>Read receipts</li>
+              <li>Typing indicators</li>
+              <li>Voice messages</li>
+              <li>Disappearing messages</li>
+              <li>Message search</li>
+              <li>Group administrators</li>
+              <li>Message reporting</li>
+            </ul>
+          </section>
+
+        </section>
+
+        <!-- =====================================
+             VOICE AND VIDEO CALLS
+        ====================================== -->
+        <section id="callsSection" class="page-section" hidden>
+
+          <h1>Calls</h1>
+
+          <div class="call-options">
+
+            <button type="button" id="startVoiceCallBtn">
+              Start Voice Call
+            </button>
+
+            <button type="button" id="startVideoCallBtn">
+              Start Video Call
+            </button>
+
+            <button type="button" id="startGroupVoiceCallBtn">
+              Group Voice Call
+            </button>
+
+            <button type="button" id="startGroupVideoCallBtn">
+              Group Video Call
+            </button>
+
+          </div>
+
+          <section id="activeCallSection" hidden>
+
+            <h2 id="callTitle">Active Call</h2>
+
+            <div id="videoCallGrid">
+              <video id="localVideo" autoplay muted playsinline></video>
+              <div id="remoteVideos"></div>
+            </div>
+
+            <p id="callStatus">Waiting for connection...</p>
+
+            <button type="button" id="muteCallBtn">
+              Mute
+            </button>
+
+            <button type="button" id="toggleCameraBtn">
+              Camera
+            </button>
+
+            <button type="button" id="switchCameraBtn">
+              Switch Camera
+            </button>
+
+            <button type="button" id="endCallBtn">
+              End Call
+            </button>
+
+          </section>
+
+          <section id="groupCallInfo">
+            <h2>Group Calls</h2>
+            <p>Planned participant limit: 50 people per group call.</p>
+          </section>
+
+          <section id="callHistorySection">
+            <h2>Call History</h2>
+            <div id="callHistory"></div>
+          </section>
+
+        </section>
+
+        <!-- =====================================
+             COMMUNITIES
+        ====================================== -->
+        <section id="communitiesSection" class="page-section" hidden>
+
+          <h1>Communities</h1>
+          <p>Find people with shared interests.</p>
+
+          <button type="button" id="createCommunityBtn">
+            Create Community
+          </button>
+
+          <input
+            type="search"
+            id="communitySearch"
+            placeholder="Search communities"
+          >
+
+          <div id="communityCategories">
+            <button type="button">Technology</button>
+            <button type="button">Education</button>
+            <button type="button">Entertainment</button>
+            <button type="button">Sports</button>
+            <button type="button">Business</button>
+            <button type="button">Music</button>
+            <button type="button">Gaming</button>
+            <button type="button">Lifestyle</button>
+          </div>
+
+          <div id="communitiesList"></div>
+
+        </section>
+
+        <!-- =====================================
+             NOTIFICATIONS
+        ====================================== -->
+        <section id="notificationsSection" class="page-section" hidden>
+
+          <h1>Notifications</h1>
+
+          <div class="notification-filters">
+            <button type="button" data-notification-filter="all">All</button>
+            <button type="button" data-notification-filter="mentions">Mentions</button>
+            <button type="button" data-notification-filter="social">Social</button>
+            <button type="button" data-notification-filter="m
