@@ -782,3 +782,54 @@
       try {
         await auth().sendPasswordResetEmail(currentUser.email);
         
+        message("Password reset email sent.");
+      } catch (error) {
+        message("Password reset error: " + error.message, true);
+      }
+    });
+  }
+
+  // Start Unitary
+  function startApp() {
+    setLoading(true);
+
+    try {
+      setTheme(localStorage.getItem("unitary_theme") || "light");
+    } catch (_) {
+      setTheme("light");
+    }
+
+    setAuthMode("login");
+    bindEvents();
+    bindNavigation();
+
+    if (!window.UNITARY_FIREBASE_READY || !window.auth || !window.db) {
+      showAuth();
+      message("Firebase is not ready. Check config.js.", true);
+      return;
+    }
+
+    auth().onAuthStateChanged(async user => {
+      currentUser = user || null;
+
+      if (!currentUser) {
+        showAuth();
+        return;
+      }
+
+      showApp();
+      await loadProfile();
+      await loadPosts();
+      await loadCommunities();
+      await loadNotifications();
+    });
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", startApp);
+  } else {
+    startApp();
+  }
+
+})();
+                
