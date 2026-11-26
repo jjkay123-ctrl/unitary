@@ -887,4 +887,56 @@ console.info(
     : "CHECK FIREBASE SETTINGS"
 );
 
+// ============================================================
+// 33. FIREBASE INITIALISATION
+// ============================================================
+
+(function initialiseUnitaryFirebase() {
+  const config = window.UNITARY_FIREBASE_CONFIG;
+
+  window.UNITARY_FIREBASE_READY = false;
+  window.UNITARY_FIREBASE_ERROR = null;
+  window.auth = null;
+  window.db = null;
+  window.storage = null;
+
+  try {
+    if (!window.firebase) {
+      throw new Error("Firebase SDK did not load.");
+    }
+
+    if (!window.UNITARY_CONFIG_READY || !config) {
+      throw new Error("Firebase configuration is incomplete.");
+    }
+
+    const app = window.firebase.apps.length
+      ? window.firebase.app()
+      : window.firebase.initializeApp(config);
+
+    window.UNITARY_FIREBASE_APP = app;
+
+    window.auth = app.auth();
+    window.db = app.firestore();
+    window.storage = app.storage();
+
+    window.UNITARY_AUTH_PERSISTENCE = window.auth
+      .setPersistence(
+        window.firebase.auth.Auth.Persistence.LOCAL
+      )
+      .catch(function (error) {
+        console.warn("Authentication persistence warning:", error);
+      });
+
+    window.UNITARY_FIREBASE_READY = true;
+
+    console.info("Unitary Firebase initialised successfully.");
+
+  } catch (error) {
+    window.UNITARY_FIREBASE_ERROR = error;
+    window.UNITARY_FIREBASE_READY = false;
+
+    console.error("Unitary Firebase initialisation failed:", error);
+  }
+})();
+        
 
