@@ -1,5 +1,5 @@
 window.UNITARY_FIREBASE_CONFIG = {
-  apiKey: "YOUR_API_KEY",
+  apiKey: "AIzaSyB4CGGN4Ht1o_9Wt_Ws1mFbGAB2zGREy9U"
   authDomain: "YOUR_AUTH_DOMAIN",
   projectId: "YOUR_PROJECT_ID",
   storageBucket: "YOUR_STORAGE_BUCKET",
