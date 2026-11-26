@@ -3,6 +3,6 @@ window.UNITARY_FIREBASE_CONFIG = {
   authDomain: "unitary-45322.firebaseapp.com",
   projectId: "unitary-45322",
   storageBucket: "unitary-45322.firebasestorage.app",
-  messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+  messagingSenderId: "131368530770",
   appId: "YOUR_APP_ID"
 };
