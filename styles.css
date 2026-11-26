@@ -1166,7 +1166,7 @@ button.full-width {
     }
 
     .app-layout {
-        display: block
+        display: block;
     padding-bottom: 70px;
     }
    }
