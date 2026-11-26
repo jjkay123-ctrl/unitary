@@ -15,18 +15,17 @@ import {
   doc,
   getDoc,
   setDoc,
-  updateDoc
+  updateDoc,
   serverTimestamp
 } from "https://www.gstatic.com/firebasejs/13.4.0/firebase-firestore.js";
 
-// Firebase connection
-const firebaseConfig = window.UNITARY_FIREBASE_CONFIG;
-const app = initializeApp(firebaseConfig);
+// Initialize Firebase
+const app = initializeApp(window.UNITARY_FIREBASE_CONFIG);
 const auth = getAuth(app);
 const db = getFirestore(app);
 const googleProvider = new GoogleAuthProvider();
 
-// Page elements
+// Login elements
 const authForm = document.getElementById("authForm");
 const emailInput = document.getElementById("email");
 const passwordInput = document.getElementById("password");
@@ -36,26 +35,34 @@ const submitBtn = document.getElementById("submitBtn");
 const googleBtn = document.getElementById("googleBtn");
 const message = document.getElementById("message");
 
+// Profile elements
+const profileSection = document.getElementById("profileSection");
+const profileForm = document.getElementById("profileForm");
+const displayNameInput = document.getElementById("displayName");
+const usernameInput = document.getElementById("username");
+const bioInput = document.getElementById("bio");
+const isPrivateInput = document.getElementById("isPrivate");
+const profileMessage = document.getElementById("profileMessage");
+
 let isSignup = false;
 
 function showMessage(text) {
   message.textContent = text;
 }
 
-// Create a profile if the user does not already have one
+// Create a profile when needed
 async function ensureProfile(user) {
   const profileRef = doc(db, "profiles", user.uid);
-  const profileSnapshot = await getDoc(profileRef);
+  const snapshot = await getDoc(profileRef);
 
-  if (!profileSnapshot.exists()) {
-    const displayName =
-      user.displayName ||
-      (user.email ? user.email.split("@")[0] : "Unitary User");
+  if (!snapshot.exists()) {
+    const name = user.displayName ||
+      user.email?.split("@")[0] || "Unitary User";
 
     await setDoc(profileRef, {
       uid: user.uid,
-      username: displayName.toLowerCase().replace(/[^a-z0-9_]/g, ""),
-      displayName: displayName,
+      username: name.toLowerCase().replace(/[^a-z0-9_]/g, "") || "user",
+      displayName: name,
       email: user.email || "",
       bio: "",
       avatarUrl: user.photoURL || "",
@@ -85,14 +92,12 @@ signupTab.addEventListener("click", () => {
 // Email and password
 authForm.addEventListener("submit", async (event) => {
   event.preventDefault();
-
   submitBtn.disabled = true;
   showMessage("Please wait...");
 
   try {
     const email = emailInput.value.trim();
     const password = passwordInput.value;
-
     let result;
 
     if (isSignup) {
@@ -106,12 +111,7 @@ authForm.addEventListener("submit", async (event) => {
     }
 
     await ensureProfile(result.user);
-
-    showMessage(
-      isSignup
-        ? "Your Unitary account and profile have been created!"
-        : "Welcome back to Unitary!"
-    );
+    showMessage("Welcome to Unitary!");
 
   } catch (error) {
     console.error(error);
@@ -129,7 +129,7 @@ googleBtn.addEventListener("click", async () => {
   try {
     const result = await signInWithPopup(auth, googleProvider);
     await ensureProfile(result.user);
-    showMessage("Welcome to Unitary! Your profile is ready.");
+    showMessage("Welcome to Unitary!");
 
   } catch (error) {
     console.error(error);
@@ -139,16 +139,73 @@ googleBtn.addEventListener("click", async () => {
   }
 });
 
-// Monitor signed-in users
+// Load and display profile
 onAuthStateChanged(auth, async (user) => {
-  if (user) {
-    try {
-      await ensureProfile(user);
-      console.log("Unitary profile is ready:", user.uid);
-    } catch (error) {
-      console.error("Profile creation failed:", error);
+  if (!user) {
+    profileSection.hidden = true;
+    return;
+  }
+
+  try {
+    await ensureProfile(user);
+
+    const snapshot = await getDoc(
+      doc(db, "profiles", user.uid)
+    );
+
+    if (snapshot.exists()) {
+      const profile = snapshot.data();
+
+      displayNameInput.value = profile.displayName || "";
+      usernameInput.value = profile.username || "";
+      bioInput.value = profile.bio || "";
+      isPrivateInput.checked = profile.isPrivate === true;
+
+      profileSection.hidden = false;
+      profileMessage.textContent = "Profile loaded.";
     }
+  } catch (error) {
+    console.error(error);
+    profileMessage.textContent = error.message;
   }
 });
-  
+
+// Save profile changes
+profileForm.addEventListener("submit", async (event) => {
+  event.preventDefault();
+
+  const user = auth.currentUser;
+
+  if (!user) {
+    profileMessage.textContent = "Please log in first.";
+    return;
+  }
+
+  const displayName = displayNameInput.value.trim();
+  const username = usernameInput.value.trim().toLowerCase();
+  const bio = bioInput.value.trim();
+
+  if (!/^[a-z0-9_]{3,20}$/.test(username)) {
+    profileMessage.textContent =
+      "Username must be 3–20 letters, numbers or underscores.";
+    return;
+  }
+
+  try {
+    profileMessage.textContent = "Saving profile...";
+
+    await updateDoc(doc(db, "profiles", user.uid), {
+      displayName,
+      username,
+      bio,
+      isPrivate: isPrivateInput.checked
+    });
+
+    profileMessage.textContent = "Profile saved successfully!";
+
+  } catch (error) {
+    console.error(error);
+    profileMessage.textContent = error.message;
+  }
+});
 
