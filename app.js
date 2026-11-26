@@ -10,15 +10,19 @@ import {
   onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/13.4.0/firebase-auth.js";
 
-// Connect to the Firebase project
+import {
+  getFirestore,
+  doc,
+  getDoc,
+  setDoc,
+  serverTimestamp
+} from "https://www.gstatic.com/firebasejs/13.4.0/firebase-firestore.js";
+
+// Firebase connection
 const firebaseConfig = window.UNITARY_FIREBASE_CONFIG;
-
-if (!firebaseConfig || !firebaseConfig.apiKey || !firebaseConfig.projectId) {
-  throw new Error("Firebase configuration is missing. Check config.js.");
-}
-
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
+const db = getFirestore(app);
 const googleProvider = new GoogleAuthProvider();
 
 // Page elements
@@ -33,12 +37,34 @@ const message = document.getElementById("message");
 
 let isSignup = false;
 
-// Display messages
 function showMessage(text) {
   message.textContent = text;
 }
 
-// Switch between login and registration
+// Create a profile if the user does not already have one
+async function ensureProfile(user) {
+  const profileRef = doc(db, "profiles", user.uid);
+  const profileSnapshot = await getDoc(profileRef);
+
+  if (!profileSnapshot.exists()) {
+    const displayName =
+      user.displayName ||
+      (user.email ? user.email.split("@")[0] : "Unitary User");
+
+    await setDoc(profileRef, {
+      uid: user.uid,
+      username: displayName.toLowerCase().replace(/[^a-z0-9_]/g, ""),
+      displayName: displayName,
+      email: user.email || "",
+      bio: "",
+      avatarUrl: user.photoURL || "",
+      isPrivate: false,
+      createdAt: serverTimestamp()
+    });
+  }
+}
+
+// Login and registration tabs
 loginTab.addEventListener("click", () => {
   isSignup = false;
   loginTab.classList.add("active");
@@ -55,36 +81,40 @@ signupTab.addEventListener("click", () => {
   showMessage("");
 });
 
-// Email and password authentication
+// Email and password
 authForm.addEventListener("submit", async (event) => {
   event.preventDefault();
-
-  const email = emailInput.value.trim();
-  const password = passwordInput.value;
 
   submitBtn.disabled = true;
   showMessage("Please wait...");
 
   try {
-    if (isSignup) {
-      await createUserWithEmailAndPassword(auth, email, password);
-      showMessage("Your Unitary account has been created successfully!");
-    } else {
-      await signInWithEmailAndPassword(auth, email, password);
-      showMessage("You are signed in successfully!");
-    }
-  } catch (error) {
-    const messages = {
-      "auth/email-already-in-use": "This email already has an account.",
-      "auth/invalid-email": "Please enter a valid email address.",
-      "auth/weak-password": "Please choose a stronger password.",
-      "auth/invalid-credential": "Email or password is incorrect.",
-      "auth/popup-closed-by-user": "Google sign-in was cancelled.",
-      "auth/unauthorized-domain": "This website domain is not authorized in Firebase."
-    };
+    const email = emailInput.value.trim();
+    const password = passwordInput.value;
 
-    showMessage(messages[error.code] || "Something went wrong. Please try again.");
+    let result;
+
+    if (isSignup) {
+      result = await createUserWithEmailAndPassword(
+        auth, email, password
+      );
+    } else {
+      result = await signInWithEmailAndPassword(
+        auth, email, password
+      );
+    }
+
+    await ensureProfile(result.user);
+
+    showMessage(
+      isSignup
+        ? "Your Unitary account and profile have been created!"
+        : "Welcome back to Unitary!"
+    );
+
+  } catch (error) {
     console.error(error);
+    showMessage(error.message);
   } finally {
     submitBtn.disabled = false;
   }
@@ -96,26 +126,28 @@ googleBtn.addEventListener("click", async () => {
   showMessage("Connecting to Google...");
 
   try {
-    await signInWithPopup(auth, googleProvider);
-    showMessage("Google sign-in successful!");
+    const result = await signInWithPopup(auth, googleProvider);
+    await ensureProfile(result.user);
+    showMessage("Welcome to Unitary! Your profile is ready.");
+
   } catch (error) {
-    showMessage(
-      error.code === "auth/unauthorized-domain"
-        ? "Add your website domain to Firebase Authorized domains."
-        : "Google sign-in could not be completed. Please try again."
-    );
     console.error(error);
+    showMessage(error.message);
   } finally {
     googleBtn.disabled = false;
   }
 });
 
-// Monitor sign-in status
-onAuthStateChanged(auth, (user) => {
+// Monitor signed-in users
+onAuthStateChanged(auth, async (user) => {
   if (user) {
-    console.log("Unitary user signed in:", user.uid);
-  } else {
-    console.log("No user signed in.");
+    try {
+      await ensureProfile(user);
+      console.log("Unitary profile is ready:", user.uid);
+    } catch (error) {
+      console.error("Profile creation failed:", error);
+    }
   }
 });
-                  
+  
+
