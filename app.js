@@ -226,7 +226,7 @@ function renderPost(id,d,parent){
   });
   card.append(
     button("Like ("+(d.likes||[]).length+")",()=>likePost(id,d.likes||[])),
-    button("Save",()=>savePost(id),true)
+    button("Save",()=>savePost(id,card),true)
   );
   parent.append(card);
 }
