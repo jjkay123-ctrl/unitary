@@ -43,14 +43,7 @@ const say = (message, error=false) => {
 
   if (error) console.error("Unitary:", message);
 };
-  const box = $("authStatus");
-  if (box && !$("authSection").hidden) {
-    box.textContent = message;
-  } else {
-    console.log("Unitary:", message);
-  }
-  if (error) console.error(message);
-};
+  
 
 const value = id => $(id)?.value?.trim() || "";
 const bind = (id,event,fn) => $(id)?.addEventListener(event,fn);
