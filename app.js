@@ -463,7 +463,6 @@ function bindEvents(){
     b.addEventListener("click",()=>navigate(b.dataset.section));
   });
 async function start(){
-function start(){
   try{theme(localStorage.getItem("unitary_theme")||"light")}catch(e){theme("light")}
   bindEvents();
   setMode("login");
