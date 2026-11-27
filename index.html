@@ -1,0 +1,289 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#171714">
+<meta name="description" content="Unitary — Connect, create and belong.">
+<title>Unitary | Connect Beyond Limits</title>
+<style>
+:root{--bg:#f5f1e8;--card:#fffdf8;--ink:#24231f;--gold:#b18a45;--muted:#817c70;--line:#e7dfd0}
+.dark{--bg:#171714;--card:#24231f;--ink:#f8f2e6;--gold:#d5ad65;--muted:#b6ad9c;--line:#39352e}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px Arial,sans-serif;transition:.25s}
+button,input,textarea{font:inherit}
+button{cursor:pointer;border:0;border-radius:12px;padding:11px 15px;background:var(--gold);color:#171714;font-weight:bold}
+button:hover{filter:brightness(1.08)}
+input,textarea{width:100%;padding:12px;border:1px solid var(--line);border-radius:12px;background:var(--bg);color:var(--ink);margin:6px 0}
+a{color:var(--gold);text-decoration:none}
+header{display:flex;align-items:center;justify-content:space-between;padding:16px 5%;border-bottom:1px solid var(--line);background:var(--card);position:sticky;top:0;z-index:5}
+.logo{font-size:25px;font-weight:900;letter-spacing:2px;color:var(--gold);text-shadow:2px 3px 0 #5c4524}
+nav{display:flex;gap:8px;flex-wrap:wrap}
+nav button,.soft{background:transparent;color:var(--ink);border:1px solid var(--line)}
+main{max-width:1100px;margin:auto;padding:22px}
+.hero{padding:65px 20px;text-align:center;border-radius:25px;background:linear-gradient(135deg,#29251d,#51412b,#171714);color:#fff8e9;box-shadow:0 18px 40px #0003}
+.hero h1{font-size:clamp(38px,8vw,68px);margin:10px;text-shadow:3px 4px 0 #8a6b39}
+.hero p{color:#e6d9c1;line-height:1.7}
+.hero button{margin:8px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px;margin:22px 0}
+.card,.panel{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px;box-shadow:0 7px 20px #0000000c}
+.card h3{color:var(--gold)}
+.hidden,[hidden]{display:none!important}
+#authSection{max-width:420px;margin:35px auto}
+#appSection{display:grid;grid-template-columns:190px 1fr;gap:18px}
+.sidebar{display:flex;flex-direction:column;gap:8px}
+.sidebar button{text-align:left;background:var(--card);color:var(--ink);border:1px solid var(--line)}
+.content{min-width:0}
+.content section{margin-bottom:16px}
+.post{padding:15px;border-bottom:1px solid var(--line)}
+.post img,.post video{max-width:100%;border-radius:12px}
+.menu{position:relative}
+#profileMenu{position:absolute;right:0;top:42px;width:190px;background:var(--card);border:1px solid var(--line);padding:10px;border-radius:14px;box-shadow:0 8px 25px #0002;z-index:10}
+#profileMenu button{display:block;width:100%;margin:4px 0;text-align:left;background:transparent;color:var(--ink)}
+footer{text-align:center;padding:30px;color:var(--muted)}
+.status{color:var(--muted);font-size:13px}
+@media(max-width:650px){header{padding:12px;flex-wrap:wrap;gap:10px}#appSection{grid-template-columns:1fr}.sidebar{display:grid;grid-template-columns:repeat(3,1fr)}.sidebar button{font-size:12px;padding:9px 5px}main{padding:12px}}
+</style>
+</head>
+<body>
+<header>
+ <div class="logo">UNITARY</div>
+ <nav>
+  <button class="soft" onclick="showPublic()">Home</button>
+  <button class="soft" onclick="openAuth('login')">Login</button>
+  <button onclick="openAuth('signup')">Join Unitary</button>
+  <button class="soft" onclick="toggleTheme()">◐</button>
+ </nav>
+</header>
+
+<main>
+<!-- PUBLIC HOMEPAGE -->
+<section id="publicHome">
+ <div class="hero">
+  <div class="logo">UNITARY</div>
+  <h1>One World. One Community.</h1>
+  <p>Connect with people, share ideas, discover creativity<br>and build meaningful communities.</p>
+  <button onclick="openAuth('signup')">Create Account</button>
+  <button class="soft" onclick="openAuth('login')">Sign In</button>
+ </div>
+ <div class="grid">
+  <div class="card"><h3>Share</h3><p>Publish ideas, photos and short videos.</p></div>
+  <div class="card"><h3>Discover</h3><p>Explore creators, communities and trending topics.</p></div>
+  <div class="card"><h3>Connect</h3><p>Chat and connect with your community.</p></div>
+  <div class="card"><h3>Communicate</h3><p>Voice and video communication features.</p></div>
+  <div class="card"><h3>Create</h3><p>Build your profile and share your creativity.</p></div>
+  <div class="card"><h3>Belong</h3><p>Find communities and people with shared interests.</p></div>
+ </div>
+</section>
+
+<!-- LOGIN AND REGISTRATION -->
+<section id="authSection" class="panel" hidden>
+ <h2 id="authHeading">Welcome to Unitary</h2>
+ <div class="grid">
+  <button id="loginTab" onclick="setAuthMode('login')">Login</button>
+  <button id="signupTab" class="soft" onclick="setAuthMode('signup')">Register</button>
+ </div>
+ <form id="authForm">
+  <input id="authDisplayName" placeholder="Your name" autocomplete="name">
+  <input id="email" type="email" placeholder="Email address" required autocomplete="email">
+  <input id="password" type="password" placeholder="Password" required autocomplete="current-password">
+  <input id="confirmPassword" type="password" placeholder="Confirm password">
+  <button id="submitBtn" type="submit">Continue</button>
+ </form>
+ <button class="soft" onclick="resetPassword()">Forgot password?</button>
+ <p id="authStatus" class="status" aria-live="polite"></p>
+ <button class="soft" onclick="showPublic()">Back to homepage</button>
+</section>
+
+<!-- SIGNED-IN APPLICATION -->
+<section id="appSection" hidden>
+ <aside class="sidebar">
+  <button data-section="home">⌂ Home</button>
+  <button data-section="discover">✦ Discover</button>
+  <button data-section="messages">✉ Messages</button>
+  <button data-section="calls">◉ Calls</button>
+  <button data-section="communities">◎ Communities</button>
+  <button data-section="notifications">♧ Notifications</button>
+  <button data-section="saved">♡ Saved</button>
+  <button data-section="profile">♙ Profile</button>
+  <button data-section="settings">⚙ Settings</button>
+ </aside>
+
+ <div class="content">
+  <div class="panel" style="margin-bottom:15px;display:flex;justify-content:space-between;align-items:center">
+   <strong>Welcome to Unitary</strong>
+   <div class="menu">
+    <button class="soft" onclick="toggleProfileMenu()">Profile ▾</button>
+    <div id="profileMenu" hidden>
+     <button data-section="profile">My profile</button>
+     <button data-section="contacts">Find Friends</button>
+     <button data-section="settings">Settings</button>
+     <button onclick="logout()">Log out</button>
+    </div>
+   </div>
+  </div>
+
+  <section id="homePanel" data-section-panel="home" class="panel">
+   <h2>Your Feed</h2>
+   <form id="createPostForm">
+    <textarea id="postText" placeholder="What's happening in your world?"></textarea>
+    <details>
+     <summary>＋ Attach Media</summary>
+     <p class="status">Choose only the files you want to share.</p>
+     <label>Photos</label><input id="postImage" type="file" accept="image/*" multiple>
+     <label>Videos</label><input id="postVideo" type="file" accept="video/*" multiple>
+     <label>Documents</label><input id="mediaDocumentInput" type="file" accept=".pdf,.doc,.docx,.txt" multiple>
+     <label>Camera</label><input id="cameraCaptureInput" type="file" accept="image/*,video/*" capture="environment">
+    </details>
+    <button type="submit">Publish Post</button>
+   </form>
+   <div id="feedContainer"><p class="status">Your posts will appear here.</p></div>
+  </section>
+
+  <section data-section-panel="discover" class="panel" hidden>
+   <h2>Discover</h2><input id="searchInput" placeholder="Search people and posts">
+   <div id="searchResults"></div>
+   <h3>Explore communities and trending topics</h3>
+  </section>
+
+  <section data-section-panel="profile" class="panel" hidden>
+   <h2>My Profile</h2>
+   <img id="profileAvatar" alt="Profile picture" width="75" height="75">
+   <form id="profileForm">
+    <input id="displayName" placeholder="Display name">
+    <input id="username" placeholder="Username">
+    <textarea id="bio" placeholder="About you"></textarea>
+    <input id="profilePicture" type="file" accept="image/*">
+    <button type="submit">Save Profile</button>
+   </form>
+   <p>Followers: <span id="followerCount">0</span> · Following: <span id="followingCount">0</span></p>
+   <button class="soft" onclick="toggleProfileMenu()">More profile options</button>
+  </section>
+
+  <!-- DISCREET CONTACTS AREA -->
+  <section data-section-panel="contacts" class="panel" hidden>
+   <h2>Find Friends</h2>
+   <p>Connect with people you know. Contact access is optional.</p>
+   <button id="accessContactsBtn">Choose Contacts</button>
+   <button class="soft" id="syncContactsBtn">Sync Selected Contacts</button>
+   <button class="soft" id="disconnectContactsBtn">Disconnect Contacts</button>
+   <p id="contactsPermissionStatus" class="status">Contacts have not been accessed.</p>
+   <div id="contactsContainer"></div>
+   <h3>Invite someone</h3>
+   <input id="inviteContactInput" placeholder="Phone number or email">
+   <button id="inviteContactBtn">Prepare Invitation</button>
+   <div id="inviteMessage"></div>
+  </section>
+
+  <section data-section-panel="messages" class="panel" hidden>
+   <h2>Messages</h2>
+   <div id="messagesContainer"></div>
+   <form id="messageForm">
+    <input id="messageInput" placeholder="Write a message">
+    <button type="submit">Send</button>
+   </form>
+  </section>
+
+  <section data-section-panel="calls" class="panel" hidden>
+   <h2>Calls</h2>
+   <p>Voice and video calling interface.</p>
+   <button id="voiceCallBtn">Voice Call</button>
+   <button id="videoCallBtn">Video Call</button>
+   <p>Group calls: planned capacity up to 50 participants.</p>
+  </section>
+
+  <section data-section-panel="communities" class="panel" hidden>
+   <h2>Communities</h2>
+   <form id="communityForm">
+    <input id="communityName" placeholder="Community name">
+    <button type="submit">Create Community</button>
+   </form>
+   <div id="communitiesContainer"></div>
+  </section>
+
+  <section data-section-panel="notifications" class="panel" hidden>
+   <h2>Notifications</h2><div id="notificationsContainer"></div>
+  </section>
+
+  <section data-section-panel="saved" class="panel" hidden>
+   <h2>Saved Posts</h2><div id="savedContainer"></div>
+  </section>
+
+  <section data-section-panel="settings" class="panel" hidden>
+   <h2>Settings</h2>
+   <button onclick="toggleTheme()">Switch Light / Dark Theme</button>
+   <p>Manage privacy, account and notification preferences.</p>
+   <button class="soft" onclick="logout()">Log out</button>
+  </section>
+ </div>
+</section>
+</main>
+
+<footer>
+ <strong>UNITARY</strong><p>Connect Beyond Limits.</p>
+ <a href="policies.html#terms">Terms</a> ·
+ <a href="policies.html#privacy">Privacy</a> ·
+ <a href="policies.html#community-guidelines">Community Guidelines</a>
+</footer>
+
+<script>
+let authMode="login";
+function openAuth(mode){
+ document.getElementById("publicHome").hidden=true;
+ document.getElementById("appSection").hidden=true;
+ document.getElementById("authSection").hidden=false;
+ setAuthMode(mode);
+}
+function showPublic(){
+ document.getElementById("publicHome").hidden=false;
+ document.getElementById("authSection").hidden=true;
+ document.getElementById("appSection").hidden=true;
+}
+function setAuthMode(mode){
+ authMode=mode;
+ document.getElementById("authHeading").textContent=mode==="signup"?"Create Your Account":"Welcome Back";
+ document.getElementById("authDisplayName").hidden=mode!=="signup";
+ document.getElementById("confirmPassword").hidden=mode!=="signup";
+ document.getElementById("submitBtn").textContent=mode==="signup"?"Create Account":"Login";
+ document.getElementById("loginTab").classList.toggle("soft",mode!=="login");
+ document.getElementById("signupTab").classList.toggle("soft",mode!=="signup");
+}
+function toggleTheme(){document.body.classList.toggle("dark")}
+function toggleProfileMenu(){
+ const m=document.getElementById("profileMenu");m.hidden=!m.hidden;
+}
+function showSection(name){
+ document.querySelectorAll("[data-section-panel]").forEach(s=>s.hidden=s.dataset.sectionPanel!==name);
+ document.getElementById("profileMenu").hidden=true;
+}
+document.querySelectorAll("[data-section]").forEach(b=>{
+ b.addEventListener("click",()=>showSection(b.dataset.section));
+});
+function resetPassword(){
+ const email=document.getElementById("email").value;
+ if(!email){document.getElementById("authStatus").textContent="Enter your email first.";return}
+ if(window.auth)auth.sendPasswordResetEmail(email).then(()=>alert("Password reset email sent.")).catch(e=>alert(e.message));
+}
+function logout(){
+ if(window.auth)auth.signOut();
+ showPublic();
+}
+document.getElementById("authForm").addEventListener("submit",function(e){
+ if(authMode==="signup"){
+  const p=document.getElementById("password").value;
+  const c=document.getElementById("confirmPassword").value;
+  if(p!==c){e.preventDefault();document.getElementById("authStatus").textContent="Passwords do not match.";return}
+ }
+});
+</script>
+
+<!-- Firebase scripts: keep config.js before app.js -->
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-storage-compat.js"></script>
+<script src="config.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
