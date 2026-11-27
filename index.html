@@ -295,6 +295,20 @@ async function unitaryAuthAction(){
    await window.auth.signInWithEmailAndPassword(email,password);
    status.textContent="Login successful!";
   }
+  // 1. Hide public homepage
+document.getElementById("publicHome").hidden=true;
+
+// 2. Hide login section
+document.getElementById("authSection").hidden=true;
+
+// 3. Show app dashboard
+document.getElementById("appSection").hidden=false;
+
+// 4. Open Home section
+if(typeof showSection==="function")showSection("home");
+
+// 5. Show success message
+status.textContent="Login successful!";
  }catch(e){
   status.textContent=e.message||"Authentication failed. Please try again.";
  }finally{
