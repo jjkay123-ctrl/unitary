@@ -269,13 +269,7 @@ function logout(){
  if(window.auth)auth.signOut();
  showPublic();
 }
-document.getElementById("authForm").addEventListener("submit",function(e){
- if(authMode==="signup"){
-  const p=document.getElementById("password").value;
-  const c=document.getElementById("confirmPassword").value;
-  if(p!==c){e.preventDefault();document.getElementById("authStatus").textContent="Passwords do not match.";return}
- }
-});
+
 </script>
 
 <!-- Firebase scripts: keep config.js before app.js -->
