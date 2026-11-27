@@ -476,6 +476,9 @@ function start(){
     say("Firebase is not ready. Check config.js.",true);
     return;
   }
+  if(window.UNITARY_AUTH_PERSISTENCE){
+  await window.UNITARY_AUTH_PERSISTENCE;
+  }
   auth().onAuthStateChanged(async current=>{
     user=current||null;
     if(!user){showPublic();return}
