@@ -249,11 +249,35 @@ async function likePost(id,likes){
   }catch(e){showError(e)}
 }
 function savedKey(){return "unitary_saved_"+user.uid}
-function savePost(id){
-  const list=JSON.parse(localStorage.getItem(savedKey())||"[]");
-  if(!list.includes(id))list.push(id);
-  localStorage.setItem(savedKey(),JSON.stringify(list));
-  say("Post saved on this device.");
+
+function savePost(id,card){
+  try{
+    if(!user)throw Error("Please log in first.");
+    const key=savedKey();
+    const list=JSON.parse(localStorage.getItem(key)||"[]");
+    if(list.includes(id)){
+      showSaveFeedback(card,"This post is already saved.");
+      return;
+    }
+    list.push(id);
+    localStorage.setItem(key,JSON.stringify(list));
+    showSaveFeedback(card,"Saved! Open Saved to view this post.");
+  }catch(e){
+    showSaveFeedback(card,e.message||"Could not save.");
+  }
+}
+
+function showSaveFeedback(card,message){
+  let note=card.querySelector(".save-feedback");
+  if(!note){
+    note=safeText("p","");
+    note.className="save-feedback status";
+    note.setAttribute("role","status");
+    card.append(note);
+  }
+  note.textContent=message;
+}
+  
 }
 async function loadSaved(){
   const box=$("savedContainer");
