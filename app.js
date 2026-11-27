@@ -16,6 +16,33 @@ let selectedContacts = [];
 const timestamp = () => firebase.firestore.FieldValue.serverTimestamp();
 
 const say = (message, error=false) => {
+  const appSection = $("appSection");
+
+  if (appSection && !appSection.hidden) {
+    let box = $("dashboardStatus");
+
+    if (!box) {
+      box = document.createElement("p");
+      box.id = "dashboardStatus";
+      box.className = "status";
+      box.setAttribute("role", "status");
+      box.setAttribute("aria-live", "polite");
+
+      const content = appSection.querySelector(".content");
+      if (content) content.prepend(box);
+    }
+
+    if (box) {
+      box.textContent = message;
+      box.style.color = error ? "#b42318" : "";
+    }
+  } else {
+    const box = $("authStatus");
+    if (box) box.textContent = message;
+  }
+
+  if (error) console.error("Unitary:", message);
+};
   const box = $("authStatus");
   if (box && !$("authSection").hidden) {
     box.textContent = message;
