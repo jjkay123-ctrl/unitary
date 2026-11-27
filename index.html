@@ -340,9 +340,8 @@ function toggleProfileMenu(){
  const m=document.getElementById("profileMenu");
  m.hidden=!m.hidden;
 }
-document.querySelectorAll("[data-section]").forEach(b=>{
- b.addEventListener("click",()=>showSection(b.dataset.section));
-});
+
+ // Section navigation is handled once by app.js.
 function logout(){
  if(window.auth)window.auth.signOut();
  showPublic();
