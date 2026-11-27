@@ -275,6 +275,9 @@ async function unitaryAuthAction(){
  status.textContent="Connecting to Unitary...";
 
  try{
+ if(window.UNITARY_AUTH_PERSISTENCE){
+ await window.UNITARY_AUTH_PERSISTENCE;
+ }
   if(!window.auth)throw new Error("Firebase Authentication is not initialized. Check config.js.");
 
   if(authMode==="signup"){
